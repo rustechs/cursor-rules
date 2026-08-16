@@ -16,7 +16,7 @@ BUILD_JOBS=$(($(nproc) - 1))
 [ "$BUILD_JOBS" -lt 1 ] && BUILD_JOBS=1
 ```
 
-On this machine (`nproc` = 8), use **7** jobs unless the tool or project already pins a lower limit.
+Example: when `nproc` is 8, use **7** jobs unless the tool or project already pins a lower limit.
 
 ## Apply when possible
 
@@ -35,7 +35,7 @@ Use `BUILD_JOBS` (or the equivalent flag) for tools that support it:
 ## Rules
 
 - Prefer explicit `-j` / `--parallel` flags over unbounded defaults when the tool would otherwise use all cores
-- Do not override a project’s documented, intentional job limit (e.g. CI config or `CARGO_BUILD_JOBS` in `.cargo/config.toml`) unless asked to change it
+- Do not override a project's documented, intentional job limit (e.g. CI config or `CARGO_BUILD_JOBS` in `.cargo/config.toml`) unless asked to change it
 - Single-threaded commands (e.g. one `rustc` invocation, `g++ file.cpp`) need no special handling
 - If parallelism is unsupported or unknown, run the build normally — do not block on adding flags
 

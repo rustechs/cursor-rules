@@ -19,6 +19,7 @@ Clone and symlink (recommended):
 ```bash
 git clone git@github.com:rustechs/cursor-rules.git ~/git/cursor-rules
 mkdir -p ~/.cursor
+# If ~/.cursor/rules already exists as a directory, move or remove it first.
 ln -sfn ~/git/cursor-rules/.cursor/rules ~/.cursor/rules
 ```
 
@@ -38,3 +39,7 @@ Edit rules in this repo, commit, push, then pull on other machines:
 ```bash
 cd ~/git/cursor-rules && git pull
 ```
+
+Symlink installs pick up file changes after `git pull`; restart Cursor or start a
+new chat so an active session reloads the rules. Copy installs need a fresh
+`cp` of the `.mdc` files.
