@@ -1,0 +1,43 @@
+---
+description: Require explicit user approval before posting or editing Linear comments/issues
+alwaysApply: true
+---
+
+# Linear: no posting without approval
+
+Never create or update Linear content on the user's behalf without **explicit approval of the exact content first**.
+
+## Applies to
+
+- Comments (`save_comment`) — including replies and thread posts
+- Issues (`save_issue`) — title, description, status, assignee, or any field change
+- Documents, project updates, diff reviews, and any other Linear MCP write action
+
+## Required workflow
+
+1. Draft the full message or change in the chat (markdown as it will appear in Linear).
+2. Ask the user to approve, edit, or reject — e.g. "Reply on MR-529?" with the draft visible.
+3. Call Linear MCP write tools **only** after the user explicitly approves (e.g. "post it", "yes", "go ahead").
+
+## Do not post when
+
+- The user only asked what to say, how to reply, or to "mention X in the thread"
+- The user asked for a rundown, summary, or draft without saying to post
+- Approval was for a different version of the text than what you are about to send
+
+## Safe without approval
+
+- Read-only Linear MCP (`list_issues`, `get_issue`, `list_comments`, etc.)
+- Showing a draft in chat for review
+
+## Examples
+
+```
+# ❌ BAD — user said "I'd like to mention this in the thread"
+→ immediately calls save_comment
+
+# ✅ GOOD
+→ draft reply in chat, ask "Post this on MR-529?"
+→ user says "post it"
+→ save_comment with approved text
+```

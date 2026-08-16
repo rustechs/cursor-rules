@@ -1,0 +1,34 @@
+---
+description: Always use pkexec for elevated/sudo authentication on this machine
+alwaysApply: true
+---
+
+# Prefer pkexec for sudo auth
+
+On this machine, never use interactive `sudo` (or `sudo -S`) to request privilege escalation. Always use `pkexec` so authentication goes through the PolicyKit GUI prompt.
+
+## Rules
+
+- Use `pkexec` whenever a command needs root or elevated privileges
+- Do not run `sudo`, `sudo -i`, `sudo -s`, or `sudo -S`
+- Prefer `pkexec <command> [args...]` over wrapping shells unless a root shell is truly required
+- If a script or tool hard-codes `sudo`, invoke the elevated parts with `pkexec` instead
+
+## Examples
+
+```bash
+# ❌ BAD — terminal sudo password prompt
+sudo apt update
+sudo systemctl restart nginx
+echo "$PASS" | sudo -S whoami
+
+# ✅ GOOD — PolicyKit GUI auth via pkexec
+pkexec apt update
+pkexec systemctl restart nginx
+pkexec whoami
+```
+
+## Notes
+
+- `pkexec` may reset environment; pass needed env explicitly when required
+- If `pkexec` fails or is unavailable, stop and report the error — do not fall back to `sudo`

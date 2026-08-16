@@ -1,0 +1,54 @@
+---
+description: Leave one CPU core free when running parallel builds on this machine
+alwaysApply: true
+---
+
+# Build parallelism (leave 1 core free)
+
+On this machine, when running compilations or builds that support parallel jobs, cap parallelism at **one less than the available CPU count** so the system stays responsive.
+
+## Compute job count
+
+Before a parallel build, derive the job count once and reuse it:
+
+```bash
+BUILD_JOBS=$(($(nproc) - 1))
+[ "$BUILD_JOBS" -lt 1 ] && BUILD_JOBS=1
+```
+
+On this machine (`nproc` = 8), use **7** jobs unless the tool or project already pins a lower limit.
+
+## Apply when possible
+
+Use `BUILD_JOBS` (or the equivalent flag) for tools that support it:
+
+| Tool | Example |
+|------|---------|
+| **cargo** | `cargo build -j "$BUILD_JOBS"` or `CARGO_BUILD_JOBS="$BUILD_JOBS" cargo build` |
+| **make** | `make -j"$BUILD_JOBS"` |
+| **ninja** | `ninja -j "$BUILD_JOBS"` |
+| **cmake** | `cmake --build . --parallel "$BUILD_JOBS"` |
+| **go** | `go build -p "$BUILD_JOBS"` |
+| **meson** | `meson compile -C build -j "$BUILD_JOBS"` |
+| **npm/pnpm** | Respect project scripts; if setting workers explicitly, use `$BUILD_JOBS` |
+
+## Rules
+
+- Prefer explicit `-j` / `--parallel` flags over unbounded defaults when the tool would otherwise use all cores
+- Do not override a project’s documented, intentional job limit (e.g. CI config or `CARGO_BUILD_JOBS` in `.cargo/config.toml`) unless asked to change it
+- Single-threaded commands (e.g. one `rustc` invocation, `g++ file.cpp`) need no special handling
+- If parallelism is unsupported or unknown, run the build normally — do not block on adding flags
+
+## Examples
+
+```bash
+# ❌ BAD — uses all cores, can freeze the desktop
+cargo build
+make -j$(nproc)
+
+# ✅ GOOD — leaves one core free
+BUILD_JOBS=$(($(nproc) - 1)); [ "$BUILD_JOBS" -lt 1 ] && BUILD_JOBS=1
+cargo build -j "$BUILD_JOBS"
+make -j"$BUILD_JOBS"
+cmake --build build --parallel "$BUILD_JOBS"
+```
