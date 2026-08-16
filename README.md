@@ -43,3 +43,15 @@ cd ~/git/cursor-rules && git pull
 Symlink installs pick up file changes after `git pull`; restart Cursor or start a
 new chat so an active session reloads the rules. Copy installs need a fresh
 `cp` of the `.mdc` files.
+
+## CI
+
+`.github/workflows/validate-rules.yml` runs on pull requests and on pushes to
+`main`/`master`. It checks every `.cursor/rules/*.mdc` file for required YAML
+frontmatter (`description`, `alwaysApply`).
+
+Run the same check locally:
+
+```bash
+python3 scripts/validate-rules.py
+```
