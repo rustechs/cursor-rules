@@ -1,0 +1,51 @@
+---
+description: Keep Cursor/agent shell work from saturating CPU and RAM on this machine
+alwaysApply: true
+---
+
+# Cursor resource limits (leave headroom)
+
+This machine runs other apps (browser, VM, etc.) alongside Cursor. When a cgroup
+or systemd slice caps Cursor/agent CPU and memory, agents must still avoid
+pointless full-machine load inside that cap.
+
+## Parallelism
+
+Follow `build-parallelism.mdc` for `BUILD_JOBS` — do not duplicate that formula here.
+
+- Prefer **one** ripgrep/glob at a time; narrow paths instead of searching `$HOME` or `.`
+- Do **not** run broad `rg`/`find` over the home directory, worktrees root, or multiple repos in parallel
+- Cap explicit ripgrep threads: `rg --threads "$BUILD_JOBS"` (or fewer)
+- Do not spawn multiple background agents/subagents unless the user asked for parallelism
+
+## Search scope
+
+- Search inside the **smallest relevant directory** (a package, module, or repo), not the workspace root when root is `~`
+- Respect `.gitignore`, `.cursorignore`, and existing `search.exclude` / `files.watcherExclude`
+- Never use `rg --follow` / symlink-following scans across large trees
+- Prefer `Grep` with `glob` / `head_limit` over unbounded shell ripgrep
+
+## Memory
+
+- Avoid loading huge files, full directory listings, or giant command outputs into context
+- Do not start heavy builds, test suites, or indexers in parallel with other agent work unless requested
+
+## When the machine is already struggling
+
+If swap is high or the UI is stuttering: finish the current step, avoid new searches/builds, and tell the user before launching anything expensive.
+
+## Examples
+
+```bash
+# ❌ BAD — scans the whole home tree from workspace root
+rg --follow 'pattern' .
+
+# ❌ BAD — two repo-wide searches in parallel
+rg -l foo ~/git/repo-a & rg -l bar ~/git/repo-b & wait
+
+# ✅ GOOD — one search, smallest useful directory
+rg --threads "$BUILD_JOBS" 'pattern' ~/git/dreambox/src
+
+# ✅ GOOD — use the editor search tool with a glob and head limit
+# Grep(pattern="foo", glob="**/*.py", head_limit=50)
+```
