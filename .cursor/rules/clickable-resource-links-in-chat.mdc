@@ -1,0 +1,40 @@
+---
+description: Always give direct clickable markdown links for URLs, files, issues, and other resources mentioned in chat
+alwaysApply: true
+---
+
+# Clickable resource links in chat
+
+When mentioning any resource in chat, give a **direct, clickable link** — not bare
+identifiers, shortened paths, or references without a destination.
+
+## Always link
+
+- **URLs** — full scheme and path in markdown links; do not elide segments.
+- **Repository files** — link the full path, e.g.
+  [`skills/prepare-pr/SKILL.md`](skills/prepare-pr/SKILL.md).
+- **GitHub** — issues, pull requests, commits, and files as full URLs.
+- **Linear** — issues and projects as full workspace URLs.
+- **Docs, plans, ADRs, skills, rules** — link the file or page when you reference it.
+
+## Format
+
+- Prefer `[label](full-url-or-path)`.
+- Pair ids with titles when both are known (e.g. `[MR-529: Forum layout fix](https://linear.app/...)`).
+- Use code citations for excerpts; link the file when referencing it without a block.
+
+## Do not
+
+- Name a URL, file, issue, or doc without linking when the location is known.
+- Truncate URLs or paths for brevity.
+- Make the user search for something you can link directly.
+
+Apply in chat and human-facing artifacts (PR bodies, plans, summaries). Skip link
+decoration inside code identifiers and verbatim quoted text.
+
+## On-disk artifacts (sibling rule)
+
+Per-file markdown links for previews, exports, logs, evidence JSON, and reports are
+covered by [`artifact-output-links.mdc`](artifact-output-links.mdc) (and repo
+`.cursor/rules/artifact-output-links.mdc` / `AGENTS.md` when in a repo). This rule
+covers general clickable resources — not the artifact-output checklist.
