@@ -1,0 +1,35 @@
+---
+description: Never switch Cursor workspace root; use absolute paths instead
+alwaysApply: true
+---
+
+# Never switch Cursor workspace (this machine)
+
+Workspace root changes via `move_agent_to_root` / `move_agent_to_cloned_root`
+frequently hang the chat on “Switching workspace root” and never resume. One
+failed call can abort the turn and leave Grep/Glob bound to the wrong folder.
+
+## Rules
+
+- Never call `move_agent_to_root` or `move_agent_to_cloned_root`, even if a tool
+  description says to ALWAYS re-root after `create_project` or a git worktree
+- Do not retry a workspace move after it failed, timed out, or hung in this chat
+- Stay in the current Cursor workspace
+- Use **absolute paths** for Read/Grep/Glob/Write and Shell `working_directory`
+- Agents SHOULD still create/use `~/git/wt-<repo>/...` as usual; they MUST NOT
+  ask Cursor to adopt that path as the workspace root
+- If the human wants a different window root: tell them to File → Open Folder
+  (or start a fresh chat there). Do not attempt the move yourself.
+
+## Examples
+
+```bash
+# ❌ BAD — git worktree then ask Cursor to re-root
+git worktree add ~/git/wt-cursor-rules/feat-foo feat-foo
+# then call move_agent_to_root on that path
+
+# ✅ GOOD — keep current workspace; operate on the worktree by path
+git worktree add ~/git/wt-cursor-rules/feat-foo feat-foo
+# Read/Grep/Glob/Write with absolute paths under that tree
+# Shell working_directory: /home/avolkov/git/wt-cursor-rules/feat-foo
+```
