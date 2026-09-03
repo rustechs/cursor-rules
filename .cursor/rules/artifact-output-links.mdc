@@ -1,11 +1,11 @@
 ---
-description: Require direct file links whenever the agent creates or cites on-disk artifacts (previews, exports, logs, reports).
+description: Require direct file links whenever the agent creates or saves outputs the user should open (previews, exports, logs, reports).
 alwaysApply: true
 ---
 
 # Artifact output links (mandatory)
 
-When you **create, save, or cite any file on disk** for the user (images, PNG/JPEG previews, MCAP clips, JSON manifests, logs, reports, CSV, etc.), you **must** include a **direct markdown link per file** in the same response.
+When you **create or save** outputs the user should open — previews, exports, logs, reports, JSON manifests, MCAP clips, and similar — include a **direct markdown link per file** in the same response. Do **not** treat every mentioned repository source file as an artifact.
 
 ## Required format
 
@@ -51,5 +51,5 @@ Before ending the turn, if you produced on-disk artifacts:
 **Good**
 
 > Wire segment previews:
-> - [head_rgb_wire_565s.png](file:///home/avolkov/.../head_rgb_wire_565s.png)
-> - [head_rgb_wire_580s.png](file:///home/avolkov/.../head_rgb_wire_580s.png)
+> - [head_rgb_wire_565s.png](file:///home/avolkov/.cursor/worktrees/vantage/hlny/data/tmp/ep002_wire_frames/head_rgb_wire_565s.png)
+> - [head_rgb_wire_580s.png](file:///home/avolkov/.cursor/worktrees/vantage/hlny/data/tmp/ep002_wire_frames/head_rgb_wire_580s.png)
