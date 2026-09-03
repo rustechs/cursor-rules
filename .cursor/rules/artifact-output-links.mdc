@@ -1,0 +1,55 @@
+---
+description: Require direct file links whenever the agent creates or saves outputs the user should open (previews, exports, logs, reports).
+alwaysApply: true
+---
+
+# Artifact output links (mandatory)
+
+When you **create or save** outputs the user should open — previews, exports, logs, reports, JSON manifests, MCAP clips, and similar — include a **direct markdown link per file** in the same response. Do **not** treat every mentioned repository source file as an artifact.
+
+## Required format
+
+One link per artifact, full absolute path, no shortening:
+
+```markdown
+[head_rgb_wire_565s.png](file:///home/avolkov/.cursor/worktrees/vantage/hlny/data/tmp/ep002_wire_frames/head_rgb_wire_565s.png)
+```
+
+Also acceptable when `file://` does not open in the client: repeat the full path on its own line in a fenced block.
+
+## Trigger (do this every time)
+
+Apply this rule when **any** of the following are true:
+
+- You used Write, a shell redirect, or a script to save output the user should open
+- You say "saved to", "written to", "under `.../`", or "preview at"
+- You show an image from a path you control (Read tool, GenerateImage, extracted frame)
+- You list multiple outputs from one task (batch previews, manifest + images, etc.)
+
+## Response checklist
+
+Before ending the turn, if you produced on-disk artifacts:
+
+1. **Link every file** the user might want to open (not just the directory)
+2. Use the **full absolute path** in each link target
+3. Put links in the **same message** as the preview or summary (not "paths available on request")
+4. If images render inline, **still** include the links — inline display is not a substitute
+
+## Forbidden (common failures)
+
+- ❌ Only showing inline images with no per-file links
+- ❌ Only giving a directory: `saved under data/tmp/foo/`
+- ❌ Burying one path in prose without a clickable link
+- ❌ Abbreviating paths (`~/git/...`, `hlny/data/tmp/...`)
+
+## Examples
+
+**Bad**
+
+> Here are two frames from the wire segment. Saved under `data/tmp/ep002_wire_frames/`.
+
+**Good**
+
+> Wire segment previews:
+> - [head_rgb_wire_565s.png](file:///home/avolkov/.cursor/worktrees/vantage/hlny/data/tmp/ep002_wire_frames/head_rgb_wire_565s.png)
+> - [head_rgb_wire_580s.png](file:///home/avolkov/.cursor/worktrees/vantage/hlny/data/tmp/ep002_wire_frames/head_rgb_wire_580s.png)

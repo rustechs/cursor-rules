@@ -8,7 +8,9 @@ These rules apply globally in every Cursor session on a machine where they are i
 
 | File | Purpose |
 |------|---------|
+| `artifact-output-links.mdc` | Require a direct markdown link for every created or saved output the user should open |
 | `build-parallelism.mdc` | Leave one CPU core free when running parallel builds (`cargo`, `make`, `cmake`, etc.) |
+| `clickable-resource-links-in-chat.mdc` | Always give clickable markdown links for URLs, files, issues, and docs |
 | `cursor-resource-limits.mdc` | Keep Cursor/agents from saturating CPU/RAM; narrow ripgrep scope; respect cgroup caps |
 | `linear-post-approval.mdc` | Require explicit user approval before posting or editing Linear content |
 | `no-workspace-switch.mdc` | Never switch Cursor workspace root; use absolute paths instead |
