@@ -11,6 +11,7 @@ These rules apply globally in every Cursor session on a machine where they are i
 | `build-parallelism.mdc` | Leave one CPU core free when running parallel builds (`cargo`, `make`, `cmake`, etc.) |
 | `cursor-resource-limits.mdc` | Keep Cursor/agents from saturating CPU/RAM; narrow ripgrep scope; respect cgroup caps |
 | `linear-post-approval.mdc` | Require explicit user approval before posting or editing Linear content |
+| `no-workspace-switch.mdc` | Never switch Cursor workspace root; use absolute paths instead |
 | `pkexec-sudo-auth.mdc` | Use `pkexec` instead of interactive `sudo` for privilege escalation |
 
 ## Install
